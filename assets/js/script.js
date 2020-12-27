@@ -70,6 +70,13 @@ var getRandomNumber = function(min,max) {
   return num;
 };
 
+var passwordBuild = function(characterSet,passwordArray) {
+  charLocation = getRandomNumber(0,characterSet.length-1);
+  //passwordBuild = passwordBuild.concat(numbers.charAt(charLocation));
+  passwordArray.push(characterSet.charAt(charLocation));
+  console.log("password 1st item = " + passwordArray + " using a random location of " + charLocation);
+}
+
 
 // generates the Password based on criteria provided by user
 var generatePassword = function () {
@@ -126,60 +133,41 @@ var generatePassword = function () {
 
     console.log("includeAtleastOne = " + includeAtleastOne);
 
+    // creates final character string including all characters chosen and 
+    // puts at least one of chosen character in password array
+    // these are placed at beginning of password array - location to be randomized later
     if (includeLowerCase === true) {
       characterString += alphaLowerCase;
+      passwordBuild(alphaLowerCase, passwordArray);
     }
 
     if (includeUpperCase === true) {
       characterString += alphaUpperCase;
+      passwordBuild(alphaUpperCase, passwordArray);
     } 
 
     if (includeNumbers === true) {
       characterString += numbers;
+      passwordBuild(numbers, passwordArray);
     } 
 
     if (includeSpecialChars === true) {
       characterString += specialChars;
+      passwordBuild(specialChars, passwordArray);
     }
     
   } // end of while !includeAtleastOne
 
   console.log("final characterString = " + characterString);
 
-  // makes sure at least one of each type of character chosen is include in password
-  // lower case, upper case, numbers and/or special characters
-  // these are placed at beginning of password array - location to be randomized later
-  if (includeLowerCase) {
-    charLocation = getRandomNumber(0,alphaLowerCase.length-1);
-    passwordArray.push(alphaLowerCase.charAt(charLocation));
-    console.log("password 1st item = " + passwordArray + " using a random location of " + charLocation);
-  }
-  if (includeUpperCase) {
-    charLocation = getRandomNumber(0,alphaUpperCase.length-1);
-    //passwordBuild = passwordBuild.concat(alphaUpperCase.charAt(charLocation));
-    passwordArray.push(alphaUpperCase.charAt(charLocation));
-    console.log("password 1st item = " + passwordArray + " using a random location of " + charLocation);
-  }
-  if (includeNumbers) {
-    charLocation = getRandomNumber(0,numbers.length-1);
-    //passwordBuild = passwordBuild.concat(numbers.charAt(charLocation));
-    passwordArray.push(numbers.charAt(charLocation));
-    console.log("password 1st item = " + passwordArray + " using a random location of " + charLocation);
-  }
-  if (includeSpecialChars) {
-    charLocation = getRandomNumber(0,specialChars.length-1);
-    //passwordBuild = passwordBuild.concat(specialChars.charAt(charLocation));
-    passwordArray.push(specialChars.charAt(charLocation));
-    console.log("password 1st item = " + passwordArray + " using a random location of " + charLocation);
-  }
-
-  // grabs random characters from the full character string to fill rest of password array
+  // fills in rest of password array with random characters from full characterString chosen by user
   for (i=passwordArray.length + 1; i<=passwordLength; i++) {
     charLocation = getRandomNumber(0,characterString.length-1);
-    console.log("new character to add from string is " + characterString.charAt(charLocation));
-    passwordArray.push(characterString.charAt(charLocation));   
-    console.log("password build = " + passwordArray + " using a random location of " + charLocation);
+    passwordBuild(characterString, passwordArray);
   }
+
+  // randomize items in the array since the first few items were included in a non-random fashion
+
 
 
   //console.log("user wants to include lower case = " + includeLowerCase);
