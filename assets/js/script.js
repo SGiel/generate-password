@@ -146,31 +146,39 @@ var generatePassword = function () {
 
   console.log("final characterString = " + characterString);
 
+  // makes sure at least one of each type of character chosen is include in password
+  // lower case, upper case, numbers and/or special characters
+  // these are placed at beginning of password array - location to be randomized later
   if (includeLowerCase) {
     charLocation = getRandomNumber(0,alphaLowerCase.length-1);
     passwordArray.push(alphaLowerCase.charAt(charLocation));
     console.log("password 1st item = " + passwordArray + " using a random location of " + charLocation);
   }
-
   if (includeUpperCase) {
     charLocation = getRandomNumber(0,alphaUpperCase.length-1);
     //passwordBuild = passwordBuild.concat(alphaUpperCase.charAt(charLocation));
     passwordArray.push(alphaUpperCase.charAt(charLocation));
     console.log("password 1st item = " + passwordArray + " using a random location of " + charLocation);
   }
-
   if (includeNumbers) {
     charLocation = getRandomNumber(0,numbers.length-1);
     //passwordBuild = passwordBuild.concat(numbers.charAt(charLocation));
     passwordArray.push(numbers.charAt(charLocation));
     console.log("password 1st item = " + passwordArray + " using a random location of " + charLocation);
   }
-
   if (includeSpecialChars) {
     charLocation = getRandomNumber(0,specialChars.length-1);
     //passwordBuild = passwordBuild.concat(specialChars.charAt(charLocation));
     passwordArray.push(specialChars.charAt(charLocation));
     console.log("password 1st item = " + passwordArray + " using a random location of " + charLocation);
+  }
+
+  // grabs random characters from the full character string to fill rest of password array
+  for (i=passwordArray.length + 1; i<=passwordLength; i++) {
+    charLocation = getRandomNumber(0,characterString.length-1);
+    console.log("new character to add from string is " + characterString.charAt(charLocation));
+    passwordArray.push(characterString.charAt(charLocation));   
+    console.log("password build = " + passwordArray + " using a random location of " + charLocation);
   }
 
 
