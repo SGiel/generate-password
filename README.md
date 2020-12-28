@@ -17,7 +17,7 @@ This JavaScript code contains skills I recently learned including utilizing func
 
 ## Link
 
-[link to Stephanie Password Generator web applicaton](https://sgiel.github.io/generate-password/)
+[Link to Stephanie's Password Generator web applicaton](https://sgiel.github.io/generate-password/)
 
 
 ## Credits
