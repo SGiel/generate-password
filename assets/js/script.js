@@ -85,13 +85,26 @@ var passwordBuild = function(characterSet,passwordArray) {
   console.log("password item = " + passwordArray + " using a random location of " + charLocation);
 };
 
+//Fisher-Yates shuffle
+var shuffle = function(anArray) {
+  var t;
+  for (let i = anArray.length - 1; i >0; i--) {
+    let j = Math.floor(Math.random()*(i + 1)); // random index from 0 to i
 
+    // swap elements anArray[i] and anArray[j]
+    t = anArray[i];
+    anArray[i] = anArray[j];
+    anArray[j] = t;
+
+  }
+}
 // generates the Password based on criteria provided by user
 var generatePassword = function () {
   console.log("userChoice before while loop ");
   console.log(userChoice);
   // password initialized as an empty string with a length of 0
   passwordArray = [];
+  passwordStr = '';
 
   // 4 strings of characters that can be used in password
   var specialChars = "!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~";
@@ -156,12 +169,16 @@ var generatePassword = function () {
     passwordBuild(characterString, passwordArray);
   }
 
-  console.log("final password = " + passwordArray);
+  console.log("password before shuffle = " + passwordArray);
 
-  // randomize items in the array since the first few items were included in a non-random fashion
-  //function shuffle(array) {
-
+  // randomly shuffle items in the array since the first few items were included 
+  // in a non-random fashion
+  shuffle(passwordArray);
+  console.log("password after shuffle = " + passwordArray);
   //}
+
+  passwordStr = passwordArray.join('');
+  return passwordStr;
   
 }; // end of generatePassword function
 
@@ -169,7 +186,6 @@ var generatePassword = function () {
 function writePassword() {
   var password = generatePassword();
   
-  password = 'abcdefghijk';
   var passwordText = document.querySelector("#password");
 
   passwordText.value = password;
