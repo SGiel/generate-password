@@ -44,13 +44,6 @@ var getYesOrNo = function(characterSet) {
   return includeChar;
 }; // end of getYesOrNo function
 
-var userChoice = {
-  passwordLength: getPasswordLength(),
-  includeLowerCase: getYesOrNo("lower case letters a to z"),
-  includeUpperCase: getYesOrNo("upper case letters A to Z"),
-  includeNumbers: getYesOrNo("numbers 0 to 9"),
-  includeSpecialChars: getYesOrNo("special characters")
-};
 
 // function to create string from designated UTF-8 unicode characters
 var getCharacters = function(firstChar,lastChar) {
@@ -65,7 +58,6 @@ var getCharacters = function(firstChar,lastChar) {
     // from unicode characters to include
     alphaGet.push(String.fromCharCode(i)); 
   }
-
   return alphaGet.join('');
 }; // end of getCharacters function
 // helpful code found at https://gist.github.com/mreigen/fdeafcc08a9e44d976bd6a8db468c496
@@ -79,13 +71,15 @@ var getRandomNumber = function(min,max) {
 
 // adds a random character to the passwordArray from a character string chosen by user
 var passwordBuild = function(characterSet,passwordArray) {
+  var charLocation;
   charLocation = getRandomNumber(0,characterSet.length-1);
   //passwordBuild = passwordBuild.concat(numbers.charAt(charLocation));
   passwordArray.push(characterSet.charAt(charLocation));
   console.log("password item = " + passwordArray + " using a random location of " + charLocation);
 };
 
-//Fisher-Yates shuffle
+
+//Fisher-Yates shuffle to randomly shuffle array items
 var shuffle = function(anArray) {
   var t;
   for (let i = anArray.length - 1; i >0; i--) {
@@ -97,64 +91,69 @@ var shuffle = function(anArray) {
     anArray[j] = t;
 
   }
-}
+}; // end of Fisher-Yates shuffle
+
+
 // generates the Password based on criteria provided by user
 var generatePassword = function () {
-  console.log("userChoice before while loop ");
-  console.log(userChoice);
-  // password initialized as an empty string with a length of 0
-  passwordArray = [];
-  passwordStr = '';
+ 
+  //final password string returned from generatePassword
+  var passwordStr = '';
 
+  // password initialized as an empty string with a length of 0
+  var passwordArray = [];
+  var passwordLength = getPasswordLength();
+  var includeLowerCase;
+  var includeUpperCase;
+  var includeNumbers;
+  var includeSpecialChars;
+  var includeAtleastOne;
+  //var charLocation;
+  
   // 4 strings of characters that can be used in password
   var specialChars = "!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~";
   var alphaUpperCase = getCharacters("A","Z");
   var alphaLowerCase = getCharacters("a","z");
   var numbers = getCharacters("0","9");
-  
-  // initialize
-  var includeAtleastOne = false;
-  var charLocation;
+  // characterString is the full concatenated string of all characters to be allowed in password
   var characterString = '';
 
   // prompts users for what type of characters to include, checking that at least one is chosen
   while (!includeAtleastOne) {
 
-    console.log("user info after while loop ");
-    console.log(userChoice);
+    includeLowerCase = getYesOrNo("lower case letters a to z");
+    includeUpperCase = getYesOrNo("upper case letters A to Z");
+    includeNumbers = getYesOrNo("numbers 0 to 9");
+    includeSpecialChars = getYesOrNo("special characters");
 
     // creates start of password array with at least one character from each of the user
     // chosen character strings: a to z;  A to Z; 0 to 9; and/or special characters
     // these are placed at beginning of password array - location of characters to be randomized later
-    if (userChoice.includeLowerCase === true) {
+    if (includeLowerCase === true) {
       characterString += alphaLowerCase;
       passwordBuild(alphaLowerCase, passwordArray);
     }
 
-    if (userChoice.includeUpperCase === true) {
+    if (includeUpperCase === true) {
       characterString += alphaUpperCase;
       passwordBuild(alphaUpperCase, passwordArray);
     } 
 
-    if (userChoice.includeNumbers === true) {
+    if (includeNumbers === true) {
       characterString += numbers;
       passwordBuild(numbers, passwordArray);
     } 
 
-    if (userChoice.includeSpecialChars === true) {
+    if (includeSpecialChars === true) {
       characterString += specialChars;
       passwordBuild(specialChars, passwordArray);
     }
 
     // check if at least one type of character was chosen, and if not, prompt user again
-    if (userChoice.includeLowerCase === false && userChoice.includeUpperCase === false && userChoice.includeNumbers === false &&
-      userChoice.includeSpecialChars === false ) {
-        userChoice.includeAtleastOne = false;
+    if (includeLowerCase === false && includeUpperCase === false && includeNumbers === false &&
+      includeSpecialChars === false ) {
+        includeAtleastOne = false;
         window.alert("You must choose at least one type of character to include in your password. Please try again.");
-        userChoice.includeLowerCase = getYesOrNo("lower case letters a to z");
-        userChoice.includeUpperCase = getYesOrNo("upper case letters A to Z");
-        userChoice.includeNumbers = getYesOrNo("numbers 0 to 9");
-        userChoice.includeSpecialChars = getYesOrNo("special characters");
     } else {
       includeAtleastOne = true;
     }
@@ -164,8 +163,8 @@ var generatePassword = function () {
   } // end of while !includeAtleastOne
 
   // fills in rest of password array with random characters from full characterString chosen by user
-  for (i=passwordArray.length + 1; i<=userChoice.passwordLength; i++) {
-    charLocation = getRandomNumber(0,characterString.length-1);
+  for (i=passwordArray.length + 1; i<=passwordLength; i++) {
+    //charLocation = getRandomNumber(0,characterString.length-1);
     passwordBuild(characterString, passwordArray);
   }
 
@@ -185,7 +184,7 @@ var generatePassword = function () {
 // Write password to the #password input
 function writePassword() {
   var password = generatePassword();
-  
+
   var passwordText = document.querySelector("#password");
 
   passwordText.value = password;
@@ -193,4 +192,4 @@ function writePassword() {
 };
 
 // Add event listener to generate button
-generateBtn.addEventListener("click", writePassword());
+generateBtn.addEventListener("click", writePassword);
