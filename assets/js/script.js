@@ -27,7 +27,7 @@ var getPasswordLength = function () {
 // user confirm whether they would like to include any characters from a defined character set in password
 var getConfirm = function(characterSet) {
 
-  var includeChar = window.confirm("Please confirm whether you would like to include " + characterSet + " in your password.");
+  var includeChar = window.confirm("Please select OK if you would like to include " + characterSet + " in your password.");
   
   return includeChar;
 }; // end of getConfirm function
