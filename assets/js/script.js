@@ -27,7 +27,7 @@ var getPasswordLength = function () {
 // user confirm whether they would like to include any characters from a defined character set in password
 var getConfirm = function(characterSet) {
 
-  var includeChar = window.confirm("Please select OK if you would like to include " + characterSet + " in your password.");
+  var includeChar = window.confirm("Please select OK to include and Cancel to not include " + characterSet + " in your password.");
   
   return includeChar;
 }; // end of getConfirm function
@@ -90,15 +90,25 @@ var shuffle = function(anArray) {
 var generatePassword = function () {
  
   //final password string returned from generatePassword
-  var passwordStr = '';
+  //var passwordStr = '';
+
+  var userInfo = {
+    passwordLength: getPasswordLength(),
+    includeLowerCase: getConfirm("lower case letters a to z"),
+    includeUpperCase: getConfirm("upper case letters A to Z"),
+    includeNumbers: getConfirm("numbers 0 to 9"),
+    includeSpecialChars: getConfirm("special characters"), 
+    characterString: '',
+    passwordStr: ''
+  };
 
   // password initialized as an empty string with a length of 0
-  var passwordArray = [];
-  var passwordLength = getPasswordLength();
-  var includeLowerCase;
-  var includeUpperCase;
-  var includeNumbers;
-  var includeSpecialChars;
+  passwordArray = [];
+  //var passwordLength = getPasswordLength();
+  //var includeLowerCase;
+  //var includeUpperCase;
+  //var includeNumbers;
+  //var includeSpecialChars;
   var includeAtleastOne;
   
   // 4 strings of characters that can be used in password
@@ -107,57 +117,56 @@ var generatePassword = function () {
   var alphaLowerCase = getCharacters("a","z");
   var numbers = getCharacters("0","9");
   // characterString is the full concatenated string of all characters to be allowed in password
-  var characterString = '';
+  // var characterString = '';
 
   // prompts users for what type of characters to include, checking that at least one is chosen
   while (!includeAtleastOne) {
 
-    includeLowerCase = getConfirm("lower case letters a to z");
-    includeUpperCase = getConfirm("upper case letters A to Z");
-    includeNumbers = getConfirm("numbers 0 to 9");
-    includeSpecialChars = getConfirm("special characters");
-
     // if user wants to includeLowerCase then add lower case characters to character string
     // and add a single random lower case letter to password array so we have at least 1
-    if (includeLowerCase === true) {
-      characterString = concatStrings(characterString,alphaLowerCase);
+    if (userInfo.includeLowerCase === true) {
+      userInfo.characterString = concatStrings(userInfo.characterString,alphaLowerCase);
       buildPassword(alphaLowerCase, passwordArray);
     }
 
     // if user wants to include upper case then add upper case characters to character string
     // and add a single random upper case letter to password array so we have at least 1
-    if (includeUpperCase === true) {
-      characterString = concatStrings(characterString,alphaUpperCase);
+    if (userInfo.includeUpperCase === true) {
+      userInfo.characterString = concatStrings(userInfo.characterString,alphaUpperCase);
       buildPassword(alphaUpperCase, passwordArray);
     } 
 
     // if user wants to include numbers then add numbers 0 to 9 to character string
     // and add a single random number to password array so we have at least 1
-    if (includeNumbers === true) {
-      characterString = concatStrings(characterString,numbers);
+    if (userInfo.includeNumbers === true) {
+      userInfo.characterString = concatStrings(userInfo.characterString,numbers);
       buildPassword(numbers, passwordArray);
     } 
 
     // if user wants to include special characters then add to character string
     // and add a single special character to password array so we have at least 1
-    if (includeSpecialChars === true) {
-      characterString = concatStrings(characterString,specialChars);
+    if (userInfo.includeSpecialChars === true) {
+      userInfo.characterString = concatStrings(userInfo.characterString,specialChars);
       buildPassword(specialChars, passwordArray);
     }
 
     // check if at least one type of character was chosen, and if not, prompt user again
-    if (includeLowerCase === false && includeUpperCase === false && includeNumbers === false &&
-      includeSpecialChars === false ) {
+    if (userInfo.includeLowerCase === false && userInfo.includeUpperCase === false && userInfo.includeNumbers === false &&
+      userInfo.includeSpecialChars === false ) {
         includeAtleastOne = false;
         window.alert("You must choose at least one type of character to include in your password. Please try again.");
+        userInfo.includeLowerCase = getConfirm("lower case letters a to z");
+        userInfo.includeUpperCase = getConfirm("upper case letters A to Z");
+        userInfo.includeNumbers = getConfirm("numbers 0 to 9");
+        userInfo.includeSpecialChars = getConfirm("special characters");
     } else {
       includeAtleastOne = true;
     }
   } // end of while !includeAtleastOne
 
   // fills in rest of password array with random characters from full characterString chosen by user
-  for (i=passwordArray.length + 1; i<=passwordLength; i++) {
-    buildPassword(characterString, passwordArray);
+  for (i=passwordArray.length + 1; i<=userInfo.passwordLength; i++) {
+    buildPassword(userInfo.characterString, passwordArray);
   }
 
   //console.log("password before shuffle = " + passwordArray);
@@ -168,8 +177,9 @@ var generatePassword = function () {
   //console.log("password after shuffle = " + passwordArray);
 
 
-  passwordStr = passwordArray.join('');
-  return passwordStr;
+  userInfo.passwordStr = passwordArray.join('');
+  //console.log(userInfo);
+  return userInfo.passwordStr;
   
 }; // end of generatePassword function
 
@@ -184,5 +194,5 @@ function writePassword() {
 };
 
 // Add event listener to generate button
-// note that writePassword passed the whole function and not the executed function writePassword()
+// note that writePassword passed as the function declaration and not the executed function writePassword()
 generateBtn.addEventListener("click", writePassword);
